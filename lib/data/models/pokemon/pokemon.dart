@@ -2,25 +2,15 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'pokemon.g.dart';
 
-extension IterableExtensions<T> on Iterable<T> {
-  Iterable<T> sortBy<TSelected extends Comparable<TSelected>>(
-          TSelected Function(T) selector) =>
-      toList()..sort((a, b) => selector(a).compareTo(selector(b)));
-
-  Iterable<T> sortByDescending<TSelected extends Comparable<TSelected>>(
-          TSelected Function(T) selector) =>
-      sortBy(selector).toList().reversed;
-}
-
 @JsonSerializable()
 class Pokemon {
   String? name;
-  @JsonKey(name: 'url')
-  String? detailUrl;
+  // @JsonKey(name: 'url')
+  String? url;
 
   Pokemon({
     this.name,
-    this.detailUrl,
+    this.url,
   });
 
   factory Pokemon.fromJson(Map<String, dynamic> json) =>
@@ -32,7 +22,79 @@ class Pokemon {
 
   @override
   String toString() {
-    return "($name,$detailUrl)";
+    return "($name,$url)";
+  }
+}
+
+@JsonSerializable()
+class PokemonAbilities {
+  List<PokemonAbilityDetail>? abilities;
+  String? name;
+
+  PokemonAbilities({
+    this.abilities,
+    this.name,
+  });
+
+  factory PokemonAbilities.fromJson(Map<String, dynamic> json) =>
+      _$PokemonAbilitiesFromJson(json);
+
+  get value => null;
+
+  Map<String, dynamic> toJson() => _$PokemonAbilitiesToJson(this);
+
+  @override
+  String toString() {
+    return "($abilities)";
+  }
+}
+
+@JsonSerializable()
+class PokemonAbilityDetail {
+  @JsonKey(name: 'is_hidden')
+  bool? isHidden;
+  int? slot;
+  // String? name;
+  PokemonAbility? ability;
+
+  PokemonAbilityDetail({
+    this.isHidden,
+    this.slot,
+    // this.name,
+    this.ability,
+  });
+
+  factory PokemonAbilityDetail.fromJson(Map<String, dynamic> json) =>
+      _$PokemonAbilityDetailFromJson(json);
+
+  get value => null;
+
+  Map<String, dynamic> toJson() => _$PokemonAbilityDetailToJson(this);
+
+  @override
+  String toString() {
+    return "($isHidden,$slot)";
+  }
+}
+
+@JsonSerializable()
+class PokemonAbility {
+  String? name;
+  String? url;
+
+  PokemonAbility({
+    this.name,
+    this.url,
+  });
+
+  factory PokemonAbility.fromJson(Map<String, dynamic> json) =>
+      _$PokemonAbilityFromJson(json);
+
+  get value => null;
+
+  @override
+  String toString() {
+    return "($name,$url)";
   }
 }
 
@@ -48,6 +110,8 @@ class PokemonsEntity {
 
   factory PokemonsEntity.fromJson(Map<String, dynamic> json) =>
       _$PokemonsEntityFromJson(json);
+
+  get value => null;
 
   @override
   String toString() {

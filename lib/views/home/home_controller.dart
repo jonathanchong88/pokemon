@@ -53,25 +53,20 @@ class HomeController extends GetxController {
 
   Future pokemonRequest(String url) async {
     await iPokemonRepository.getPokemons(url: url).then((value) {
-      if (value['results'] == null) {
+      pokemonEntity = value;
+      if (pokemonEntity.count == 0) {
         _sessionState.value = ViewState.error;
         CommonWidget.errorPrompt(Constant.errorMessage);
         return;
       }
-      _sessionState.value = ViewState.retrived;
-      pokemonEntity = PokemonsEntity.fromJson(value);
-
-      if (pokemonEntity.next!.isEmpty) {
-        hasReachedMax = true;
-      }
-      if (pokemonEntity.previous == null || pokemonEntity.previous!.isEmpty) {
+      // _sessionState.value = ViewState.retrived;
+      if (pokemonList.length.isEqual(0)) {
         pokemonList = CommonWidget()
             .getPokemonInOrder(pokemonEntity.pokemons!, isAscendingOrder);
       } else {
         pokemonList.addAll(pokemonEntity.pokemons!);
         pokemonList =
             CommonWidget().getPokemonInOrder(pokemonList, isAscendingOrder);
-        update();
       }
       update();
     }).catchError((onError) {

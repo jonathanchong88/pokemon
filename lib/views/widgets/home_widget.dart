@@ -9,7 +9,11 @@ Widget homeWidget(HomeController controller) {
     crossAxisCount: 4,
     itemCount: controller.pokemonList.length,
     itemBuilder: (BuildContext context, int index) => InkWell(
-      onTap: () {},
+      onTap: () {
+        // var pokemon = controller.pokemonList[index];
+        Get.toNamed(AppRoutes.DETAIL,
+            arguments: {'pokemon': controller.pokemonList[index]});
+      },
       child: Container(
           margin: const EdgeInsets.only(top: 20, left: 10, right: 10),
           decoration: BoxDecoration(

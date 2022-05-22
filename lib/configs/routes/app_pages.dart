@@ -12,6 +12,12 @@ class Routes {
         page: () => const HomePage(),
         preventDuplicates: true,
       ),
+      GetPage<DetailPage>(
+        name: AppRoutes.DETAIL,
+        binding: DetailBinding(),
+        page: () => DetailPage(),
+        preventDuplicates: true,
+      ),
     ];
   }
 }
