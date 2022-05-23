@@ -20,6 +20,10 @@ class HomePage extends GetView<HomeController> {
                   ),
                   onSelected: (value) {
                     if (value == 1) {
+                      controller.pokemonRequest(Api.pokemonDbDefaultUrl);
+                    } else if (value == 2) {
+                      controller.favouritePokemonRequest();
+                    } else if (value == 3) {
                       controller.changeItemInOrder(true);
                     } else {
                       controller.changeItemInOrder(false);
@@ -28,10 +32,18 @@ class HomePage extends GetView<HomeController> {
                   itemBuilder: (ctx) => [
                     const PopupMenuItem(
                       value: 1,
-                      child: Text("Ascending"),
+                      child: Text("All"),
                     ),
                     const PopupMenuItem(
                       value: 2,
+                      child: Text("Favourite"),
+                    ),
+                    const PopupMenuItem(
+                      value: 3,
+                      child: Text("Ascending"),
+                    ),
+                    const PopupMenuItem(
+                      value: 4,
                       child: Text("Descending"),
                     )
                   ],

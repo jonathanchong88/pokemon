@@ -8,29 +8,47 @@ class DetailController extends GetxController {
   ViewState get sessionState => _sessionState.value;
 
   var pokemonAbilities = PokemonAbilities();
-  var argument = Get.arguments['pokemon'];
+  Pokemon pokemon = Get.arguments['pokemon'] as Pokemon;
 
   DetailController({required this.iPokemonRepository});
 
   final IPokemonRepository iPokemonRepository;
 
+  bool isFavouriteChange = false;
+
   iniState() {
-    getPokemonDetailRequest(argument.detailUrl);
+    getPokemonDetailRequest();
   }
 
-  Future getPokemonDetailRequest(String url) async {
-    await iPokemonRepository.getPokemonDetail(url: url).then((value) {
-      if (value['abilities'] == null) {
+  Future getPokemonDetailRequest() async {
+    _sessionState.value = ViewState.busy;
+    await iPokemonRepository
+        .getPokemonDetail(url: pokemon.url!, name: pokemon.name)
+        .then((value) {
+      pokemonAbilities = value;
+      if (pokemonAbilities.name!.isEmpty) {
         _sessionState.value = ViewState.error;
         CommonWidget.errorPrompt(Constant.errorMessage);
         return;
       }
       _sessionState.value = ViewState.retrived;
-
-      pokemonAbilities = PokemonAbilities.fromJson(value);
       update();
     }).catchError((onError) {
       CommonWidget.errorPrompt(onError.toString());
+    });
+  }
+
+  Future updatePokemonFavourite() async {
+    pokemon.isFavourite = !pokemon.isFavourite!;
+    isFavouriteChange = !isFavouriteChange;
+    await iPokemonRepository
+        .updatePokemonFavourite(pokemon: pokemon)
+        .then((value) {
+      if (!value) {
+        CommonWidget.errorPrompt(Constant.errorMessage);
+        return;
+      }
+      update();
     });
   }
 }

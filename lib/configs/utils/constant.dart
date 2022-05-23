@@ -8,7 +8,9 @@ class Constant {
   static const int listLimit = 20;
   static const String errorMessage =
       'Your request is not successful. Please try again later.';
-  // static Map<String, Map<String, String>> _localizedValues = {
+  final List<String> dynamicChips = ['Health', 'Food', 'Nature'];
+
+// static Map<String, Map<String, String>> _localizedValues = {
   //   'en': {'language_type': 'English', 'bar': 'Bar'},
   //   'ar': {'foo': '中文', 'bar': 'بار'}
   // };

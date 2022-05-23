@@ -7,11 +7,9 @@ class Pokemon {
   String? name;
   // @JsonKey(name: 'url')
   String? url;
+  bool? isFavourite;
 
-  Pokemon({
-    this.name,
-    this.url,
-  });
+  Pokemon({this.name, this.url, this.isFavourite = false});
 
   factory Pokemon.fromJson(Map<String, dynamic> json) =>
       _$PokemonFromJson(json);
@@ -89,6 +87,8 @@ class PokemonAbility {
 
   factory PokemonAbility.fromJson(Map<String, dynamic> json) =>
       _$PokemonAbilityFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PokemonAbilityToJson(this);
 
   get value => null;
 

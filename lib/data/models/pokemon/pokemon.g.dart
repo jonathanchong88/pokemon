@@ -9,11 +9,13 @@ part of 'pokemon.dart';
 Pokemon _$PokemonFromJson(Map<String, dynamic> json) => Pokemon(
       name: json['name'] as String?,
       url: json['url'] as String?,
+      isFavourite: json['isFavourite'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$PokemonToJson(Pokemon instance) => <String, dynamic>{
       'name': instance.name,
       'url': instance.url,
+      'isFavourite': instance.isFavourite,
     };
 
 PokemonAbilities _$PokemonAbilitiesFromJson(Map<String, dynamic> json) =>

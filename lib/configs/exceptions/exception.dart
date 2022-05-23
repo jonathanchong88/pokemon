@@ -29,3 +29,8 @@ class ServiceNotRespondingException extends AppException {
   ServiceNotRespondingException([String? message])
       : super(message, 'Not Responding: ');
 }
+
+class GetLocalDatabaseException extends AppException {
+  GetLocalDatabaseException([String? message])
+      : super(message, 'Fail to get data from database: ');
+}

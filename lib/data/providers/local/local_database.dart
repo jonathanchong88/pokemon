@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter_app_pokemon/data/data.dart';
 import 'package:sqflite/sqflite.dart';
+
+import '../../../configs/config.dart';
 
 class LocalDatabase {
   /// For Pokemon table
@@ -7,7 +11,15 @@ class LocalDatabase {
 
   // All Columns
   final String _colPokemonName = "name";
-  final String _colPokemonDetailUrl = "url";
+  final String _colPokemonUrl = "url";
+  final String _colPokemonIsFavourite = "isFavourite";
+
+  /// For Pokemon table
+  final String _pokemonDetailTableData = "pokemon_detail"; // Table Name
+
+  // All Columns
+  final String _colPokemonDetailName = "name";
+  final String _colPokemonDetailAbilities = "abilities";
 
   /// Create Singleton Objects(Only Created once in the whole application)
   static late LocalDatabase _localStorageHelper =
@@ -42,12 +54,9 @@ class LocalDatabase {
     return await openDatabase(path, version: 1, onOpen: (db) {},
         onCreate: (Database db, int version) async {
       await createTableToStorePokemonData(db);
+      await createTableToStorePokemonDetailData(db);
     });
   }
-
-  // Future _createDB(Database db, int version) async {
-  //
-  // }
 
   Future<void> deletePersonTable() async {
     final db = await database;
@@ -64,7 +73,7 @@ class LocalDatabase {
     try {
       // final Database db = await database;
       await db.execute(
-          "CREATE TABLE $_pokemonsTableData($_colPokemonName TEXT PRIMARY KEY, $_colPokemonDetailUrl TEXT)");
+          "CREATE TABLE $_pokemonsTableData($_colPokemonName TEXT PRIMARY KEY, $_colPokemonUrl TEXT, $_colPokemonIsFavourite NUMERIC)");
 
       print('Pokemon table created');
     } catch (e) {
@@ -72,7 +81,7 @@ class LocalDatabase {
     }
   }
 
-  insertPersons(List<Pokemon> pokemons) async {
+  insertPokemons(List<Pokemon> pokemons) async {
     final db = await database;
 
     for (Pokemon pokemon in pokemons) {
@@ -84,11 +93,109 @@ class LocalDatabase {
     }
   }
 
-  Future<List<Pokemon>> retrievePokemons() async {
+  Future<List<Pokemon>> getPokemons() async {
     final db = await database;
     final List<Map<String, Object?>> queryResult =
         await db.query(_pokemonsTableData);
-    return queryResult.map((e) => Pokemon.fromJson(e)).toList();
+    return queryResult
+        .map((e) => Pokemon(
+              name: e['name'].toString(),
+              url: e['url'].toString(),
+              isFavourite: e['isFavourite'] == 0 ? false : true,
+            ))
+        .toList();
+  }
+
+  Future<List<Pokemon>> getFavouritePokemons() async {
+    final db = await database;
+    final List<Map<String, Object?>> queryResult = await db.rawQuery(
+        "SELECT * FROM $_pokemonsTableData WHERE $_colPokemonIsFavourite='1'");
+    return queryResult
+        .map((e) => Pokemon(
+              name: e['name'].toString(),
+              url: e['url'].toString(),
+              isFavourite: e['isFavourite'] == 0 ? false : true,
+            ))
+        .toList();
+  }
+
+  Future<bool> updatePokemonFavourite(Pokemon pokemon) async {
+    try {
+      final db = await database;
+
+      await db.update(
+        _pokemonsTableData,
+        pokemon.toJson(),
+        where: '$_colPokemonName = ?',
+        whereArgs: [pokemon.name],
+      );
+
+      print('Pokemon table created');
+      return true;
+    } catch (e) {
+      print('Error in Create Pokemon Table: ${e.toString()}');
+      return false;
+    }
+  }
+
+  /// Table for store pokemon detaial data Table
+  Future<void> createTableToStorePokemonDetailData(Database db) async {
+    try {
+      await db.execute(
+          "CREATE TABLE $_pokemonDetailTableData($_colPokemonDetailName TEXT PRIMARY KEY, $_colPokemonDetailAbilities TEXT)");
+
+      print('Pokemon table created');
+    } catch (e) {
+      print('Error in Create Pokemon Table: ${e.toString()}');
+    }
+  }
+
+  insertPersonDetail(PokemonAbilities pokemonAbilities) async {
+    final db = await database;
+
+    try {
+      final Map<String, dynamic> detailData = <String, dynamic>{};
+
+      String jsonTags = jsonEncode(pokemonAbilities.abilities);
+
+      detailData[_colPokemonDetailName] = pokemonAbilities.name;
+      detailData[_colPokemonDetailAbilities] = jsonTags;
+
+      await db.insert(_pokemonDetailTableData, detailData);
+    } catch (e) {
+      print('Error in get pokemon Table: ${e.toString()}');
+    }
+  }
+
+  Future<PokemonAbilities> getPokemonDetailByName(String pokemonName) async {
+    try {
+      final Database db = await database;
+
+      List<Map<String, Object?>> result = await db.rawQuery(
+          "SELECT * FROM $_pokemonDetailTableData WHERE $_colPokemonDetailName='$pokemonName'");
+
+      return PokemonAbilities(
+          name: result[0]['name'] as String,
+          abilities: (json.decode((result[0]['abilities'] as String))
+                  as List<dynamic>?)
+              ?.map((e) =>
+                  PokemonAbilityDetail.fromJson(e as Map<String, dynamic>))
+              .toList());
+    } catch (e) {
+      throw GetLocalDatabaseException();
+    }
+  }
+
+  // delete all records in the table
+  Future<void> deleteAllFromTable() async {
+    final Database db = await database;
+    await db.rawDelete('DELETE FROM $_pokemonDetailTableData');
+  }
+
+  // delete all records in the table
+  Future<void> deletePokemonsAllFromTable() async {
+    final Database db = await database;
+    await db.rawDelete('DELETE FROM $_pokemonsTableData');
   }
 
   /// Insert or Update From Important Data Table

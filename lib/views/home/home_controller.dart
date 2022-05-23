@@ -60,17 +60,44 @@ class HomeController extends GetxController {
         return;
       }
       // _sessionState.value = ViewState.retrived;
-      if (pokemonList.length.isEqual(0)) {
-        pokemonList = CommonWidget()
-            .getPokemonInOrder(pokemonEntity.pokemons!, isAscendingOrder);
-      } else {
-        pokemonList.addAll(pokemonEntity.pokemons!);
-        pokemonList =
-            CommonWidget().getPokemonInOrder(pokemonList, isAscendingOrder);
-      }
+
+      pokemonList = CommonWidget()
+          .getPokemonInOrder(pokemonEntity.pokemons!, isAscendingOrder);
       update();
     }).catchError((onError) {
       CommonWidget.errorPrompt(onError.toString());
+    });
+  }
+
+  Future favouritePokemonRequest() async {
+    await iPokemonRepository.getFavouritePokemons().then((value) {
+      pokemonEntity = value;
+      if (pokemonEntity.count == 0) {
+        _sessionState.value = ViewState.error;
+        CommonWidget.errorPrompt(Constant.errorMessage);
+        return;
+      }
+      // _sessionState.value = ViewState.retrived;
+
+      pokemonList = CommonWidget()
+          .getPokemonInOrder(pokemonEntity.pokemons!, isAscendingOrder);
+      update();
+    }).catchError((onError) {
+      CommonWidget.errorPrompt(onError.toString());
+    });
+  }
+
+  Future updatePokemonFavourite(int index) async {
+    pokemonList[index].isFavourite = !pokemonList[index].isFavourite!;
+    await iPokemonRepository
+        .updatePokemonFavourite(pokemon: pokemonList[index])
+        .then((value) {
+      if (!value) {
+        CommonWidget.errorPrompt(Constant.errorMessage);
+        return;
+      }
+
+      update();
     });
   }
 
