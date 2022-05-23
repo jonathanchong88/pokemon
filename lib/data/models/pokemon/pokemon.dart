@@ -5,18 +5,43 @@ part 'pokemon.g.dart';
 @JsonSerializable()
 class Pokemon {
   String? name;
-  // @JsonKey(name: 'url')
   String? url;
   bool? isFavourite;
+  int? id;
 
-  Pokemon({this.name, this.url, this.isFavourite = false});
+  Pokemon({this.name, this.url, this.isFavourite = false, this.id = -1});
 
-  factory Pokemon.fromJson(Map<String, dynamic> json) =>
-      _$PokemonFromJson(json);
+  // factory Pokemon.fromJson(Map<String, dynamic> json) =>
+  //     _$PokemonFromJson(json);
+
+  factory Pokemon.fromJson(Map<String, dynamic> json) {
+    Uri uri = Uri.parse(json['url']);
+    // print(;
+
+    return Pokemon(
+      name: json['name'] as String?,
+      url: json['url'] as String?,
+      id: json['id'] != null
+          ? json['id'] as int
+          : int.parse(uri.pathSegments[uri.pathSegments.length - 2]),
+      isFavourite: json['isFavourite'] as bool? ?? false,
+    );
+  }
 
   get value => null;
 
-  Map<String, dynamic> toJson() => _$PokemonToJson(this);
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'url': url,
+      'id': id,
+      'isFavourite': isFavourite,
+    };
+  }
+
+  // Map<String, dynamic> toJson() => <String, dynamic>{
+
+  // };;
 
   @override
   String toString() {

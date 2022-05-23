@@ -13,6 +13,7 @@ class LocalDatabase {
   final String _colPokemonName = "name";
   final String _colPokemonUrl = "url";
   final String _colPokemonIsFavourite = "isFavourite";
+  final String _colPokemonId = "id";
 
   /// For Pokemon table
   final String _pokemonDetailTableData = "pokemon_detail"; // Table Name
@@ -73,7 +74,7 @@ class LocalDatabase {
     try {
       // final Database db = await database;
       await db.execute(
-          "CREATE TABLE $_pokemonsTableData($_colPokemonName TEXT PRIMARY KEY, $_colPokemonUrl TEXT, $_colPokemonIsFavourite NUMERIC)");
+          "CREATE TABLE $_pokemonsTableData($_colPokemonName TEXT PRIMARY KEY, $_colPokemonUrl TEXT, $_colPokemonIsFavourite NUMERIC, $_colPokemonId INTEGER)");
 
       print('Pokemon table created');
     } catch (e) {
@@ -91,16 +92,24 @@ class LocalDatabase {
         print('Error in get pokemon Table: ${e.toString()}');
       }
     }
+
+    final List<Map<String, Object?>> queryResult =
+        await db.rawQuery("SELECT * FROM $_pokemonsTableData");
+    // print(queryResult);
   }
 
   Future<List<Pokemon>> getPokemons() async {
     final db = await database;
+    // final List<Map<String, Object?>> queryResult =
+    //     await db.query(_pokemonsTableData);
     final List<Map<String, Object?>> queryResult =
-        await db.query(_pokemonsTableData);
+        await db.rawQuery("SELECT * FROM $_pokemonsTableData");
+    print(queryResult);
     return queryResult
         .map((e) => Pokemon(
               name: e['name'].toString(),
               url: e['url'].toString(),
+              id: e['id'] as int,
               isFavourite: e['isFavourite'] == 0 ? false : true,
             ))
         .toList();
@@ -114,6 +123,7 @@ class LocalDatabase {
         .map((e) => Pokemon(
               name: e['name'].toString(),
               url: e['url'].toString(),
+              id: e['id'] as int,
               isFavourite: e['isFavourite'] == 0 ? false : true,
             ))
         .toList();

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_pokemon/configs/config.dart';
 
@@ -9,6 +10,17 @@ Widget detailWidget(DetailController controller) {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: CachedNetworkImage(
+            fit: BoxFit.fill,
+            imageUrl: sprintf(Api.pokemonDbImagetUrl, [controller.pokemon.id]),
+            errorWidget: (context, url, error) => const Icon(Icons.error),
+          ),
+        ),
         const Text(
           'Name',
           style: TextStyle(fontWeight: FontWeight.bold),

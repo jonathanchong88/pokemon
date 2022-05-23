@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../configs/config.dart';
@@ -18,28 +19,88 @@ Widget homeWidget(HomeController controller) {
         }
       },
       child: Container(
-        margin: const EdgeInsets.only(top: 20, left: 10, right: 10),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Colors.black),
-        ),
-        child: ListTile(
-          title: Center(
-            child: Text(controller.pokemonList[index].name!),
-          ),
-          trailing: IconButton(
-              icon: Icon(
-                Icons.favorite,
-                color: controller.pokemonList[index].isFavourite!
-                    ? Colors.red
-                    : Colors.grey,
+        margin: const EdgeInsets.only(left: 15, right: 15, bottom: 20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
               ),
-              onPressed: () {
-                controller.updatePokemonFavourite(index);
-              }),
+              child: CachedNetworkImage(
+                fit: BoxFit.fill,
+                imageUrl: sprintf(
+                    Api.pokemonDbImagetUrl, [controller.pokemonList[index].id]),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text(
+                  controller.pokemonList[index].name!,
+                  overflow: TextOverflow.fade,
+                  maxLines: 1,
+                  softWrap: false,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                IconButton(
+                    icon: Icon(
+                      Icons.favorite,
+                      color: controller.pokemonList[index].isFavourite!
+                          ? Colors.red
+                          : Colors.grey,
+                    ),
+                    onPressed: () {
+                      controller.updatePokemonFavourite(index);
+                    }),
+              ],
+            )
+            // ListTile(
+            //   title: Text(controller.pokemonList[index].name!),
+            //   trailing: IconButton(
+            //       icon: Icon(
+            //         Icons.favorite,
+            //         color: controller.pokemonList[index].isFavourite!
+            //             ? Colors.red
+            //             : Colors.grey,
+            //       ),
+            //       onPressed: () {
+            //         controller.updatePokemonFavourite(index);
+            //       }),
+            // ),
+          ],
         ),
       ),
+      // Stack(
+      //   children: [
+      //     Container(
+      //       decoration: BoxDecoration(
+      //         borderRadius: BorderRadius.circular(15),
+      //         image: DecorationImage(
+      //             image: NetworkImage(sprintf(Api.pokemonDbImagetUrl,
+      //                 [controller.pokemonList[index].id])),
+      //             fit: BoxFit.fill),
+      //       ),
+      //     ),
+      //     ListTile(
+      //       title: Text(controller.pokemonList[index].name!),
+      //       trailing: IconButton(
+      //           icon: Icon(
+      //             Icons.favorite,
+      //             color: controller.pokemonList[index].isFavourite!
+      //                 ? Colors.red
+      //                 : Colors.grey,
+      //           ),
+      //           onPressed: () {
+      //             controller.updatePokemonFavourite(index);
+      //           }),
+      //     ),
+      //   ],
+      // ),
     ),
     staggeredTileBuilder: (int index) => const StaggeredTile.count(2, 2),
     mainAxisSpacing: 4.0,

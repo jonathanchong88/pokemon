@@ -42,6 +42,7 @@ class PokemonRepository extends BaseProvider implements IPokemonRepository {
         var pokemonEntity = PokemonsEntity.fromJson(value);
 
         //insert data to database
+        // localDatabase.deletePersonTable();
         localDatabase.insertPokemons(pokemonEntity.pokemons!);
       }
       List<Pokemon> pokemons = await localDatabase.getPokemons();

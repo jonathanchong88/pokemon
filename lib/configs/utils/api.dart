@@ -7,4 +7,6 @@ class Api {
       '${pokemonDbBaseUrl}pokemon/?limit=${Constant.listLimit}';
   static const String pokemonDbLimitOffsetUrl =
       '${pokemonDbBaseUrl}pokemon/?offset=%i&limit=${Constant.listLimit}';
+  static String pokemonDbImagetUrl =
+      'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/%i.png';
 }

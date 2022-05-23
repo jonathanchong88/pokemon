@@ -43,6 +43,7 @@ dependencies:
   sqflite: ^2.0.0+4
   connectivity_plus: ^2.3.0
   sprintf: ^6.0.0
+  cached_network_image:
 
 dev_dependencies:
   flutter_test:
