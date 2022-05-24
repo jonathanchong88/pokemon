@@ -13,12 +13,11 @@ class HomeController extends GetxController {
   List<Pokemon> pokemonList = [];
   var pokemonEntity = const PokemonsEntity();
 
-  bool hasReachedMax, isAscendingOrder = true;
+  bool hasReachedMax = false, isAscendingOrder = true;
 
   final ScrollController scrollController = ScrollController();
 
-  HomeController(
-      {required this.iPokemonRepository, this.hasReachedMax = false});
+  HomeController({required this.iPokemonRepository});
 
   final IPokemonRepository iPokemonRepository;
 
@@ -102,6 +101,10 @@ class HomeController extends GetxController {
       if (!value) {
         CommonWidget.errorPrompt(Constant.errorMessage);
         return;
+      }
+
+      if (viewState == ViewType.favourite && !pokemonList[index].isFavourite!) {
+        pokemonList.removeAt(index);
       }
       update();
     });

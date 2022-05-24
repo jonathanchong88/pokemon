@@ -44,7 +44,7 @@ Widget homeWidget(HomeController controller) {
                 arguments: {'pokemon': controller.pokemonList[index]});
 
             if (result != null) {
-              controller.pokemonRequest(Api.pokemonDbDefaultUrl);
+              controller.onRefresh();
             }
           },
           child: Container(

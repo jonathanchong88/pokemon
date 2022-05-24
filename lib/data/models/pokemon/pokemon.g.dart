@@ -10,12 +10,14 @@ Pokemon _$PokemonFromJson(Map<String, dynamic> json) => Pokemon(
       name: json['name'] as String?,
       url: json['url'] as String?,
       isFavourite: json['isFavourite'] as bool? ?? false,
+      id: json['id'] as int? ?? -1,
     );
 
 Map<String, dynamic> _$PokemonToJson(Pokemon instance) => <String, dynamic>{
       'name': instance.name,
       'url': instance.url,
       'isFavourite': instance.isFavourite,
+      'id': instance.id,
     };
 
 PokemonAbilities _$PokemonAbilitiesFromJson(Map<String, dynamic> json) =>
