@@ -7,8 +7,8 @@ import '../view.dart';
 Widget detailWidget(DetailController controller) {
   if (controller.sessionState == ViewState.retrived) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
+      // mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Container(
           decoration: BoxDecoration(
@@ -21,17 +21,28 @@ Widget detailWidget(DetailController controller) {
             errorWidget: (context, url, error) => const Icon(Icons.error),
           ),
         ),
-        const Text(
-          'Name',
-          style: TextStyle(fontWeight: FontWeight.bold),
+        const Align(
+          alignment: Alignment.topLeft,
+          child: Text(
+            'Name',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            textAlign: TextAlign.start,
+          ),
         ),
-        Text(controller.pokemonAbilities.name!.capitalizeFirst!),
+        Align(
+          alignment: Alignment.topLeft,
+          child: Text(controller.pokemonAbilities.name!.capitalizeFirst!),
+        ),
         const SizedBox(
           height: 18,
         ),
-        const Text(
-          'Abilities',
-          style: TextStyle(fontWeight: FontWeight.bold),
+        const Align(
+          alignment: Alignment.topLeft,
+          child: Text(
+            'Abilities',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            textAlign: TextAlign.start,
+          ),
         ),
         ListView.builder(
           shrinkWrap: true,

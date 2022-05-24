@@ -8,13 +8,14 @@ class HomeController extends GetxController {
 
   ViewState get sessionState => _sessionState.value;
 
+  ViewType viewState = ViewType.all;
+
   List<Pokemon> pokemonList = [];
   var pokemonEntity = const PokemonsEntity();
 
   bool hasReachedMax, isAscendingOrder = true;
 
   final ScrollController scrollController = ScrollController();
-  final RxBool isLoading = false.obs;
 
   HomeController(
       {required this.iPokemonRepository, this.hasReachedMax = false});
@@ -55,16 +56,17 @@ class HomeController extends GetxController {
     await iPokemonRepository.getPokemons(url: url).then((value) {
       pokemonEntity = value;
       if (pokemonEntity.count == 0) {
-        _sessionState.value = ViewState.error;
+        // _sessionState.value = ViewState.error;
         CommonWidget.errorPrompt(Constant.errorMessage);
         return;
       }
-      // _sessionState.value = ViewState.retrived;
-
       pokemonList = CommonWidget()
           .getPokemonInOrder(pokemonEntity.pokemons!, isAscendingOrder);
+      _sessionState.value = ViewState.retrived;
       update();
     }).catchError((onError) {
+      _sessionState.value = ViewState.loss_internet;
+      update();
       CommonWidget.errorPrompt(onError.toString());
     });
   }
@@ -73,7 +75,7 @@ class HomeController extends GetxController {
     await iPokemonRepository.getFavouritePokemons().then((value) {
       pokemonEntity = value;
       if (pokemonEntity.count == 0) {
-        _sessionState.value = ViewState.error;
+        // _sessionState.value = ViewState.error;
         CommonWidget.errorPrompt(Constant.errorMessage);
         return;
       }
@@ -96,7 +98,6 @@ class HomeController extends GetxController {
         CommonWidget.errorPrompt(Constant.errorMessage);
         return;
       }
-
       update();
     });
   }
@@ -109,5 +110,14 @@ class HomeController extends GetxController {
       pokemonList = CommonWidget().getPokemonInOrder(pokemonList, false);
     }
     update();
+  }
+
+  Future<void> onRefresh() async {
+    pokemonList.clear();
+    if (viewState == ViewType.all) {
+      pokemonRequest(Api.pokemonDbDefaultUrl);
+    } else {
+      favouritePokemonRequest();
+    }
   }
 }

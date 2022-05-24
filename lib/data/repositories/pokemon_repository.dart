@@ -42,10 +42,13 @@ class PokemonRepository extends BaseProvider implements IPokemonRepository {
         var pokemonEntity = PokemonsEntity.fromJson(value);
 
         //insert data to database
-        // localDatabase.deletePersonTable();
         localDatabase.insertPokemons(pokemonEntity.pokemons!);
       }
       List<Pokemon> pokemons = await localDatabase.getPokemons();
+
+      if (pokemons.isEmpty) {
+        throw FetchDataException('No Internet Connection');
+      }
 
       return PokemonsEntity(
           pokemons: pokemons,
@@ -59,6 +62,8 @@ class PokemonRepository extends BaseProvider implements IPokemonRepository {
     } on TimeoutException {
       throw ServiceNotRespondingException(
           'Service not responding in time please check your Internet Connection');
+    } on Exception {
+      throw FetchDataException('No Internet Connection');
     }
   }
 

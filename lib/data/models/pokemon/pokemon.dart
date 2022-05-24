@@ -11,12 +11,8 @@ class Pokemon {
 
   Pokemon({this.name, this.url, this.isFavourite = false, this.id = -1});
 
-  // factory Pokemon.fromJson(Map<String, dynamic> json) =>
-  //     _$PokemonFromJson(json);
-
   factory Pokemon.fromJson(Map<String, dynamic> json) {
     Uri uri = Uri.parse(json['url']);
-    // print(;
 
     return Pokemon(
       name: json['name'] as String?,
@@ -38,10 +34,6 @@ class Pokemon {
       'isFavourite': isFavourite,
     };
   }
-
-  // Map<String, dynamic> toJson() => <String, dynamic>{
-
-  // };;
 
   @override
   String toString() {
@@ -77,13 +69,11 @@ class PokemonAbilityDetail {
   @JsonKey(name: 'is_hidden')
   bool? isHidden;
   int? slot;
-  // String? name;
   PokemonAbility? ability;
 
   PokemonAbilityDetail({
     this.isHidden,
     this.slot,
-    // this.name,
     this.ability,
   });
 

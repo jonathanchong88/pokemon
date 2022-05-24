@@ -12,21 +12,26 @@ class DetailPage extends GetView<DetailController> {
       initState: controller.iniState(),
       builder: (value) => Scaffold(
         appBar: CommonWidget.appBar(
-            context, 'Detail', Icons.arrow_back, Colors.black, callback: () {
-          if (controller.isFavouriteChange) {
-            Get.back(result: true);
-          } else {
-            Get.back();
-          }
-        },
-            actonWidget: IconButton(
-                icon: Icon(
-                  Icons.favorite,
-                  color: value.pokemon.isFavourite! ? Colors.red : Colors.grey,
-                ),
-                onPressed: () {
-                  value.updatePokemonFavourite();
-                })),
+          context,
+          'Detail',
+          Icons.arrow_back,
+          Colors.black,
+          callback: () {
+            if (controller.isFavouriteChange) {
+              Get.back(result: true);
+            } else {
+              Get.back();
+            }
+          },
+          actonWidget: IconButton(
+              icon: Icon(
+                Icons.favorite,
+                color: value.pokemon.isFavourite! ? Colors.red : Colors.grey,
+              ),
+              onPressed: () {
+                value.updatePokemonFavourite();
+              }),
+        ),
         backgroundColor: Colors.white,
         body: Padding(
           padding: const EdgeInsets.all(10.0),

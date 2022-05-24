@@ -1,5 +1,3 @@
-enum UploadImageStatus { Okay, Fail }
+enum ViewState { idle, retrived, busy, error, loss_internet }
 
-enum UserRole { Guest, User }
-
-enum ViewState { idle, retrived, busy, error }
+enum ViewType { all, favourite }
