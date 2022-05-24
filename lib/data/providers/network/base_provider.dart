@@ -6,8 +6,6 @@ import 'package:http/http.dart' as http;
 
 import '../../../configs/config.dart';
 
-enum Requests { get, post, put, delete, update }
-
 class BaseProvider {
   final client = http.Client();
   late http.Response response;

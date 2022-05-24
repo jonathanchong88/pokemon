@@ -22,6 +22,7 @@ class HomeController extends GetxController {
 
   final IPokemonRepository iPokemonRepository;
 
+  // init function
   initState() {
     pokemonList.clear();
     pokemonRequest(Api.pokemonDbDefaultUrl);
@@ -34,14 +35,18 @@ class HomeController extends GetxController {
     scrollController.removeListener(_onScroll);
   }
 
+  // scroll function is triggered when user is scrolling
   void _onScroll() {
-    if (_isBottom && pokemonEntity.next!.isNotEmpty) {
+    if (_isBottom &&
+        pokemonEntity.next!.isNotEmpty &&
+        viewState == ViewType.all) {
       pokemonRequest(pokemonEntity.next!);
     } else {
       hasReachedMax = true;
     }
   }
 
+  // checking the screen is scroll to bottom
   bool get _isBottom {
     if (scrollController.position.atEdge &&
         scrollController.position.pixels ==
@@ -52,11 +57,11 @@ class HomeController extends GetxController {
     }
   }
 
+  // get pokemon list from repository
   Future pokemonRequest(String url) async {
     await iPokemonRepository.getPokemons(url: url).then((value) {
       pokemonEntity = value;
       if (pokemonEntity.count == 0) {
-        // _sessionState.value = ViewState.error;
         CommonWidget.errorPrompt(Constant.errorMessage);
         return;
       }
@@ -71,15 +76,14 @@ class HomeController extends GetxController {
     });
   }
 
+  // get favourite pokemon list from repository
   Future favouritePokemonRequest() async {
     await iPokemonRepository.getFavouritePokemons().then((value) {
       pokemonEntity = value;
       if (pokemonEntity.count == 0) {
-        // _sessionState.value = ViewState.error;
         CommonWidget.errorPrompt(Constant.errorMessage);
         return;
       }
-      // _sessionState.value = ViewState.retrived;
 
       pokemonList = CommonWidget()
           .getPokemonInOrder(pokemonEntity.pokemons!, isAscendingOrder);
@@ -89,6 +93,7 @@ class HomeController extends GetxController {
     });
   }
 
+  // update favourite for selected pokemon
   Future updatePokemonFavourite(int index) async {
     pokemonList[index].isFavourite = !pokemonList[index].isFavourite!;
     await iPokemonRepository
@@ -102,6 +107,7 @@ class HomeController extends GetxController {
     });
   }
 
+  // change list items order in ascending or descending
   changeItemInOrder(bool isAscending) {
     isAscendingOrder = isAscending;
     if (isAscending) {
@@ -112,6 +118,7 @@ class HomeController extends GetxController {
     update();
   }
 
+  // refresh the pokemon list
   Future<void> onRefresh() async {
     pokemonList.clear();
     if (viewState == ViewType.all) {

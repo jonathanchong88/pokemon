@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 
 import '../../data/data.dart';
 
@@ -60,24 +59,6 @@ class CommonWidget {
     );
   }
 
-  static String convertDateFormat(String format, DateTime _date) {
-    // return DateFormat().format(_date);
-    final dtFormat = DateFormat(format);
-    var str = dtFormat.format(_date);
-    return str;
-  }
-
-  static showLoading() {
-    Get.defaultDialog(
-        title: "Loading...",
-        content: const CircularProgressIndicator(),
-        barrierDismissible: false);
-  }
-
-  static dismissLoadingWidget() {
-    Get.back();
-  }
-
   List<Pokemon> getPokemonInOrder(List<Pokemon> items, bool isAscending) {
     items.sort((a, b) {
       return a.name!.toLowerCase().compareTo(b.name!.toLowerCase());
@@ -88,11 +69,5 @@ class CommonWidget {
     } else {
       return items.reversed.toList();
     }
-  }
-
-  static int daysBetween(DateTime from, DateTime to) {
-    from = DateTime(from.year, from.month, from.day);
-    to = DateTime(to.year, to.month, to.day);
-    return (to.difference(from).inHours / 24).round();
   }
 }

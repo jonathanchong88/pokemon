@@ -16,10 +16,12 @@ class DetailController extends GetxController {
 
   bool isFavouriteChange = false;
 
+  //init function
   iniState() {
     getPokemonDetailRequest();
   }
 
+  //get pokemon detail from repository
   Future getPokemonDetailRequest() async {
     _sessionState.value = ViewState.busy;
     await iPokemonRepository
@@ -38,6 +40,7 @@ class DetailController extends GetxController {
     });
   }
 
+  //update pokemon favourite
   Future updatePokemonFavourite() async {
     pokemon.isFavourite = !pokemon.isFavourite!;
     isFavouriteChange = !isFavouriteChange;

@@ -4,10 +4,10 @@ import 'package:flutter_app_pokemon/configs/config.dart';
 
 import '../view.dart';
 
+//Wigdet for detail page
 Widget detailWidget(DetailController controller) {
   if (controller.sessionState == ViewState.retrived) {
     return Column(
-      // mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Container(

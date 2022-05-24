@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_app_pokemon/data/providers/local/local_database.dart';
-import 'package:sprintf/sprintf.dart';
 
 import '../../configs/config.dart';
 import '../models/model.dart';
@@ -42,7 +41,7 @@ class PokemonRepository extends BaseProvider implements IPokemonRepository {
         var pokemonEntity = PokemonsEntity.fromJson(value);
 
         //insert data to database
-        localDatabase.insertPokemons(pokemonEntity.pokemons!);
+        await localDatabase.insertPokemons(pokemonEntity.pokemons!);
       }
       List<Pokemon> pokemons = await localDatabase.getPokemons();
 
@@ -88,7 +87,7 @@ class PokemonRepository extends BaseProvider implements IPokemonRepository {
         var pokemonAbilities = PokemonAbilities.fromJson(value);
 
         //insert data to database
-        localDatabase.insertPersonDetail(pokemonAbilities);
+        localDatabase.insertPokemonDetail(pokemonAbilities);
 
         return pokemonAbilities;
       }

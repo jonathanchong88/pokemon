@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../configs/config.dart';
 import '../view.dart';
 
+//widget for home page
 Widget homeWidget(HomeController controller) {
   if (controller.sessionState == ViewState.loss_internet) {
     return Center(
